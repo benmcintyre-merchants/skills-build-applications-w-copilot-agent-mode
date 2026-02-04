@@ -15,22 +15,13 @@ Including another URLconf
 """
 
 
-from django.http import JsonResponse
-import os
-
-def api_root(request):
-    codespace_name = os.environ.get('CODESPACE_NAME', None)
-    if codespace_name:
-        api_url = f"https://{codespace_name}-8000.app.github.dev/api/"
-    else:
-        api_url = "/api/"
-    return JsonResponse({"api_root": api_url})
-
-from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
+from . import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', api_root),
-    path('api/', include('octofit_tracker.urls')),
+    path('users/', views.UserViewSet.as_view({'get': 'list'}), name='user-list'),
+    path('teams/', views.TeamViewSet.as_view({'get': 'list'}), name='team-list'),
+    path('activities/', views.ActivityViewSet.as_view({'get': 'list'}), name='activity-list'),
+    path('leaderboard/', views.LeaderboardViewSet.as_view({'get': 'list'}), name='leaderboard-list'),
+    path('workouts/', views.WorkoutViewSet.as_view({'get': 'list'}), name='workout-list'),
 ]
